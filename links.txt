@@ -1,0 +1,90 @@
+///// --------------   issue tracker  ----------- 
+
+https://github.com/search?p=1&q=Issue+Tracker+web+app&type=Repositories
+
+https://github.com/rporumalla/django-producthunt-project - product hunt
+
+Issue Tracker web app https://issues-track.herokuapp.com - 
+https://github.com/akabiru/Issue-Tracker - Flask based
+
+Django and post to follow code institue
+
+https://github.com/luisanegri/issue-tracker 
+
+Django and post to follow code institue
+
+https://github.com/jordandaly/issue_tracker
+
+Django and post to follow code institue
+
+https://github.com/ShaunZA/django-issue-tracker
+
+
+Django and post to follow code institue
+https://github.com/Paddywc/milestone-project-5
+
+https://paddywc-unicornattractor.herokuapp.com/
+
+---Flask-Python
+
+https://github.com/StromGrail/Simple-Issue-Tracker
+
+
+Django Sticky
+https://github.com/awildtechno/django_issue_tracker
+
+Django todo import
+https://github.com/shacker/django-todo
+
+
+Django and post to follow code institue
+https://github.com/Migacz85/django_app
+
+Django and post to follow code institue
+https://github.com/hfolcot/issue-tracker - 
+
+Django and post to follow code institue
+https://github.com/marcuscistudent/django-issue-tracker
+
+Django and post to follow code institue
+https://github.com/KillTheDJ94/django-issue-tracker
+
+Django and post to follow code institue
+https://github.com/Code-Institute-Submissions/issue-tracker-1
+
+Django and post to follow code institue
+https://github.com/neon-flights/unicorn-attractor
+
+http://blog.adnansiddiqi.me/develop-your-first-web-application-in-django-1-10-part-2/
+
+https://github.com/kadnan/OhBugz#ohbugz
+
+https://github.com/ggMartinez/simple-issue-tracker
+
+https://github.com/mrsarm/django-coleman
+
+https://stackoverflow.com/questions/6799561/django-task-managements-system
+
+https://buildmedia.readthedocs.org/media/pdf/djenofdjango/latest/djenofdjango.pdf
+
+https://github.com/yusukegoto/djenofdjango
+
+for Model -
+https://github.com/rayray1/django-issue-tracker
+https://github.com/hfrequency/django-issue-tracker
+https://github.com/mostateresnet/django-ticket
+https://github.com/CesarAsturias/issue_tracker/blob/master/issue/models.py
+https://github.com/lekhakpadmanabh/itracker
+
+https://github.com/hjpotter92/django-issue-tracker
+
+to follow-
+
+https://github.com/poulp/django-app-tracker
+https://github.com/asifmohd/issueTracking
+
+main link -
+
+https://github.com/search?p=1&q=Issue-Tracker+-django&type=Repositories
+
+
