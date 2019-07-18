@@ -21,7 +21,7 @@ ON item.CustOrderRSN_ID = head.Id
 AND item.sku_id = sku.Id 
 AND head.Customer_Id = customer.Id 
 
-AND cus_code = 'DRES4' 
+AND cus_code = 'BA004A' 
 
 GROUP BY SKU 
 ORDER BY SKU DESC
@@ -42,7 +42,7 @@ AND
 And
 	item.sku_id = sku.Id
 
-WHERE RSN IN (169755, 169757,169757)
+WHERE RSN IN (169751, 169752, 169801)
 GROUP BY SKU
 ORDER BY SKU DESC
 
@@ -864,18 +864,326 @@ ON (t1.LineCol = t2.LineCol)
 LEFT OUTER JOIN sku as t3
 
 ON (t1.LineCol = t3.LineCol)
+
 WHERE t1.Avilable_Stock > '2' AND
 
-t1.BrandName IN ('Yumi', 'YUMI RETAIL', 'Y by Yumi', 'YUMI ORIGINAL', 'YUMI-RETAIL') AND
+t1.BrandName IN ('Yumi', 'YUMI RETAIL', 'Y by Yumi', 'YUMI ORIGINAL', 'YUMI-RETAIL', 
+				 'Yumi Curves', '
+                 YUMI GIRLS RETAIL', 'YUMI GIRLS') 
+
+AND
 
 t1.Season IN ('AW11', 'AW12', 'AW13', 'AW14', 'AW15', 'AW16', 'AW17', 'AW18', 'AW19', 'IW15',
-				'PD15' 'PD16', 'PD17', 'PD18', 'PD19',
-                'SS13', 'SS14', 'SS15', 'SS16', 'SS17', 'SS18', 'SS19','SS20')
+			  'PD15' 'PD16', 'PD17', 'PD18', 'PD19','SS13', 'SS14', 'SS15', 'SS16', 'SS17',
+              'SS18', 'SS19','SS20')
 
 GROUP BY LineCol 
 ORDER BY LineCol
 
 /*/////////////////////////////// end   //////////////*/
+
+//////////////////////////////// Pivot_SIZE   ///////////////
+
+create view torque_stock_size as (
+  select
+    torque_stock.SKU,
+    case when COLOUR = "WHITE" then AVAILABLE end as WHITE,
+	case when COLOUR = "BLACK" then AVAILABLE end as BLACK
+    from torque_stock
+);
+
+/*/////////////////////////////// Pivot_SIZE   //////////////*/
+
+create view torque_stock_by_size as (
+  select
+    torque_stock.SKU,
+    case when SKU_SIZE = "6" then AVAILABLE end as SIX,
+    case when SKU_SIZE = "8" then AVAILABLE end as EIGHT,
+	case when SKU_SIZE = "10" then AVAILABLE end as TEN,
+    case when SKU_SIZE = "12" then AVAILABLE end as TWELVEL,
+    case when SKU_SIZE = "14" then AVAILABLE end as FOURTEEN,
+    case when SKU_SIZE = "16" then AVAILABLE end as SIXTEEN,
+    
+    case when SKU_SIZE = "XXS" then AVAILABLE end as XXS,
+    case when SKU_SIZE = "XS" then AVAILABLE end as XS,
+    case when SKU_SIZE = "S" then AVAILABLE end as S,
+    case when SKU_SIZE = "M" then AVAILABLE end as M,
+    case when SKU_SIZE = "L" then AVAILABLE end as L,
+    case when SKU_SIZE = "XL" then AVAILABLE end as XL,
+    case when SKU_SIZE = "XXL" then AVAILABLE end as XXL,
+    case when SKU_SIZE = "S/M" then AVAILABLE end as SM,
+    case when SKU_SIZE = "M/L" then AVAILABLE end as ML,
+    case when SKU_SIZE = "SM" then AVAILABLE end as SSM,
+    case when SKU_SIZE = "ML" then AVAILABLE end as MML,
+    
+	case when SKU_SIZE = "FREE" then AVAILABLE end as Free,
+    case when SKU_SIZE = "ONE" then AVAILABLE end as ONESIZE,
+    
+    case when SKU_SIZE = "18" then AVAILABLE end as EIG,
+    case when SKU_SIZE = "20" then AVAILABLE end as TWE,
+    case when SKU_SIZE = "22" then AVAILABLE end as TWET,
+    case when SKU_SIZE = "24" then AVAILABLE end as TWEF,
+    case when SKU_SIZE = "26" then AVAILABLE end as TWES,
+    case when SKU_SIZE = "28" then AVAILABLE end as TWEE,
+    
+    case when SKU_SIZE = "40" then AVAILABLE end as FOURTY,
+    case when SKU_SIZE = "42" then AVAILABLE end as FOURTYT,
+    case when SKU_SIZE = "44" then AVAILABLE end as FOURTYF,
+    case when SKU_SIZE = "46" then AVAILABLE end as FOURTS,
+    case when SKU_SIZE = "48" then AVAILABLE end as FOURTE,
+    
+    case when SKU_SIZE = "3" then AVAILABLE end as THREE,
+    case when SKU_SIZE = "4" then AVAILABLE end as FOUR,
+    case when SKU_SIZE = "5" then AVAILABLE end as FIVE,
+    case when SKU_SIZE = "7" then AVAILABLE end as SEVEN,
+    
+    case when SKU_SIZE = "3Y" then AVAILABLE end as 3Y,
+    case when SKU_SIZE = "3/4Y" then AVAILABLE end as 4Y,
+    case when SKU_SIZE = "4/5Y" then AVAILABLE end as 5Y,
+    case when SKU_SIZE = "5/6Y" then AVAILABLE end as 6Y,
+    case when SKU_SIZE = "7/8Y" then AVAILABLE end as 7Y,
+    case when SKU_SIZE = "9/10Y" then AVAILABLE end as 10Y,
+    case when SKU_SIZE = "11/12Y" then AVAILABLE end as 12Y,
+    case when SKU_SIZE = "13/14Y" then AVAILABLE end as 14Y,
+    case when SKU_SIZE = "13Y" then AVAILABLE end as 13Y,
+    
+    case when SKU_SIZE = "3-4Y" then AVAILABLE end as 4YY,
+    case when SKU_SIZE = "4-5Y" then AVAILABLE end as 5YY,
+    case when SKU_SIZE = "7-8Y" then AVAILABLE end as 8YY,
+    case when SKU_SIZE = "9-10Y" then AVAILABLE end as 10YY,
+    
+    case when SKU_SIZE = "10/11F" then AVAILABLE end as 11F,
+    case when SKU_SIZE = "11/12F" then AVAILABLE end as 12F,
+    case when SKU_SIZE = "2/3F" then AVAILABLE end as 3F,
+    
+    case when SKU_SIZE = "05-Jun" then AVAILABLE end as 6S,
+    case when SKU_SIZE = "07-Aug" then AVAILABLE end as 8S
+    
+    from torque_stock
+);
+
+
+create view torque_stock_by_size_Pivot as (
+  select
+    SKU,
+		sum(SIX) as SIX,
+        sum(EIGHT) as EIGHT,
+        sum(TEN) as TEN,
+        sum(TWELVEL) as TWELVEL,
+        sum(FOURTEEN) as FOURTEEN,
+        sum(SIXTEEN) as SIXTEEN,
+        
+        sum(XXS) as XXS,
+        sum(XS) as XS,
+        sum(S) as S,
+        sum(M) as M,
+        sum(L) as L,
+        sum(XL) as XL,
+        sum(XXL) as XXL,
+        
+        sum(SM) as SM,
+        sum(ML) as ML,
+        
+        sum(SSM) as SSM,
+        sum(MML) as MML,
+        
+        sum(FREE) as FREE,
+        sum(ONESIZE) as ONESIZE,
+        
+        sum(EIG) as EIG,
+        sum(TWE) as TWE,
+        sum(TWET) as TWET,
+        sum(TWEF) as TWEF,
+        sum(TWES) as TWES,
+        sum(TWEE) as TWEE,
+        
+        sum(FOURTY) as FOURTY,
+        sum(FOURTYT) as FOURTYT,
+        sum(FOURTYF) as FOURTYF,
+        sum(FOURTS) as FOURTS,
+        sum( FOURTE) as  FOURTE,
+        
+		sum(THREE) as THREE,
+        sum(FOUR) as FOUR,
+        sum(FIVE) as FIVE,
+        sum(SEVEN) as SEVEN,
+        
+        sum(3Y) as 3Y,
+        sum(4Y) as 4Y,
+        sum(5Y) as 5Y,
+        sum(6Y) as 6Y,
+        sum(7Y) as 7Y,
+        sum(10Y) as 10Y,
+        sum(12Y) as 12Y,
+        sum(14Y) as 14Y,
+        sum(13Y) as 13Y,
+        
+        sum(4YY) as 4YY,
+        sum(5YY) as 5YY,
+        sum(8YY) as 8YY,
+        sum(10YY) as 10YY,
+        
+        sum(11F) as 11F,
+        sum(12F) as 12F,
+        sum(3F) as 3F,
+        
+        sum(6S) as 6S,
+        sum(8S) as 8S
+      
+From torque_stock_by_size
+group by SKU
+);
+
+create view torque_stock_by_size_Pivot_Pretty as (
+  select 
+	SKU,
+    coalesce(SIX,0) as "06",
+	coalesce(EIGHT,0) as "08",
+	coalesce(TEN,0) as "10",
+	coalesce(TWELVEL,0) as "12",
+	coalesce(FOURTEEN,0) as "14",
+	coalesce(SIXTEEN,0) as "16",
+    
+	coalesce(XXS,0) as XXS,
+	coalesce(XS,0) as XS,
+	coalesce(S,0) as S,
+	coalesce(M,0) as M,
+	coalesce(L,0) as L,
+	coalesce(XL,0) as XL,
+	coalesce(XXL,0) as XXL,
+    
+	coalesce(SM,0) as "STM",
+	coalesce(ML,0) as "MTM",
+	coalesce(SSM,0) as "SM",
+	coalesce(MML,0) as "ML",
+    
+	coalesce(FREE,0) as FREE,
+	coalesce(ONESIZE,0) as "ONE",
+    
+	coalesce(EIG,0) as "18",
+	coalesce(TWE,0) as "20",
+	coalesce(TWET,0) as "22",
+	coalesce(TWEF,0) as "24",
+	coalesce(TWES,0) as "26",
+	coalesce(TWEE,0) as "28",
+    
+	coalesce(FOURTY,0) as "40",
+	coalesce(FOURTYT,0) as "42",
+	coalesce(FOURTYF,0) as "44",
+	coalesce(FOURTS,0) as "46",
+	coalesce(FOURTE,0) as "48",
+    
+	coalesce(THREE,0) as "03",
+	coalesce(FOUR,0) as "04",
+	coalesce(FIVE,0) as "05",
+	coalesce(SEVEN,0) as "07",
+    
+	coalesce(3Y,0) as "Y3",
+	coalesce(4Y,0) as "Y3_4Y",
+	coalesce(5Y,0) as "Y4_5Y",
+	coalesce(6Y,0) as "Y5_6Y",
+	coalesce(7Y,0) as "Y7_8Y",
+	coalesce(10Y,0) as "Y9_10Y",
+	coalesce(12Y,0) as "Y11_12Y",
+	coalesce(14Y,0) as "Y13_14Y",
+	coalesce(13Y,0) as "Y13",
+    
+    coalesce(4YY,0) as "Y3__4Y",
+	coalesce(5YY,0) as "Y4__5Y",
+	coalesce(8YY,0) as "Y7__8Y" ,
+	coalesce(10YY,0) as "Y9__10Y",
+    
+    coalesce(11F,0) as "F10__11F",
+	coalesce(12F,0) as "F11__12F",
+	coalesce(3F,0) as "F2__3F",
+    
+	coalesce(6S,0) as "05_Jun",
+	coalesce(8S,0) as "07_Aug"
+        
+    
+from torque_stock_by_size_Pivot
+);
+
+/*/////////////////////////////// end   //////////////*/
+
+
+SELECT
+    t2.LineCol, t2.Style, t2.Colour, t2.BrandName, t2.Season,  
+	t1.06, t1.08, t1.10, t1.12, t1.14, t1.16,
+    t1.XS, t1.S, t1.M, t1.L, t1.XL, t1.XXL,
+    t1.STM as "S/M", t1.MTM as "M/L",
+    t1.SM, t1.ML,
+    t1.FREE, t1.ONE,
+    t1.18, t1.20, t1.22, t1.24, t1.26, t1.28,
+    t1.Y3 as 3Y, t1.Y3_4Y as "3/4Y", t1.Y4_5Y as "4/5Y", t1.Y5_6Y as "5/6Y", t1.Y7_8Y as "7/8Y",
+    t1.Y9_10Y as "9/10Y", t1.Y11_12Y as "11/12Y", t1.Y13_14Y as "13/14Y", t1.Y13 as "13Y",
+    t1.03, t1.04, t1.05, t1.07,
+    t1.Y3__4Y as "3-4Y", t1.Y4__5Y as "4-5Y", t1.Y7__8Y as "7-8Y", t1.Y9__10Y as "9-10Y",
+    t1.F10__11F as "10/11F", t1.F11__12F as "11/12F", t1.F2__3F as "2/3F",
+    t1.05_Jun as "6S",  t1.07_Aug as "8S"
+    
+		FROM torque_stock_by_size_Pivot_Pretty as t1
+		LEFT OUTER JOIN sku as t2
+		ON t1.SKU = t2.SKU
+		GROUP BY LineCol
+		ORDER BY LineCol
+
+/* ######################################   */
+
+create view torque_stock_by_size_test as (
+  select
+    torque_stock.SKU,
+    case when SKU_SIZE = "6" then AVAILABLE end as SIX,
+    case when SKU_SIZE = "S" then AVAILABLE end as S,
+    case when SKU_SIZE = "M" then AVAILABLE end as M,
+	case when SKU_SIZE = "VIII" then AVAILABLE end as VIII
+
+	from torque_stock
+);
+
+/*/////////////////////////////// end   //////////////*/
+
+create view torque_stock_by_size_test_Pivot as (
+  select
+  SKU,
+		sum(S) as S,
+        sum(M) as M,
+        sum(SIX) as SIX,
+        sum(VIII) as VIII
+        
+	From torque_stock_by_size_test
+    group by SKU
+);
+
+/*/////////////////////////////// end   //////////////*/
+
+create view torque_stock_by_size_test_Pivot_Pretty as (
+  select 
+	SKU,
+    coalesce(S, 0) as S,
+    coalesce(M, 0) as M,
+    coalesce(SIX, 0) as "06",
+    coalesce(VIII, 0) as "08"
+from torque_stock_by_size_test_Pivot
+);
+
+
+
+/* ?* https://stackoverflow.com/questions/12004603/mysql-pivot-row-into-dynamic-number-of-columns */
+
+SELECT
+	t1.SKU, t1.LineCol, t1.Style, t1.Colour,
+	t1.BrandName, t1.Season, t1.RRPGBP
+FROM sku as t1
+LEFT OUTER JOIN torque_stock_by_size_Pivot_Pretty as t2
+ON t1.SKU = t2.SKU
+GROUP BY SKU
+ORDER BY SKU
+#####################################
+
+
+
+
 
 
 
