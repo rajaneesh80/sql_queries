@@ -26,7 +26,7 @@ AND cus_code = 'BA004A'
 GROUP BY SKU 
 ORDER BY SKU DESC
 
-################ CUSTOMER REPORT BY ORDER 1.0 ###############
+################ CUSTOMER REPORT BY ORDER BY RSN ###############
 SELECT
 	sku.LineCol, sku.Style, sku.Colour,
     sum(item.TotalQty),
@@ -896,7 +896,7 @@ create view torque_stock_size as (
 
 create view torque_stock_by_size as (
   select
-    torque_stock.SKU,
+	torque_stock.SKU,
     case when SKU_SIZE = "6" then AVAILABLE end as SIX,
     case when SKU_SIZE = "8" then AVAILABLE end as EIGHT,
 	case when SKU_SIZE = "10" then AVAILABLE end as TEN,
@@ -1029,7 +1029,7 @@ create view torque_stock_by_size_Pivot as (
         
         sum(6S) as 6S,
         sum(8S) as 8S
-      
+       
 From torque_stock_by_size
 group by SKU
 );
@@ -1106,7 +1106,7 @@ from torque_stock_by_size_Pivot
 
 /*/////////////////////////////// end   //////////////*/
 
-
+/*/////////////////////////////// TABLE AND VIEWS JOIN   //////////////*/
 SELECT
     t2.LineCol, t2.Style, t2.Colour, t2.BrandName, t2.Season,  
 	t1.06, t1.08, t1.10, t1.12, t1.14, t1.16,
@@ -1120,7 +1120,8 @@ SELECT
     t1.03, t1.04, t1.05, t1.07,
     t1.Y3__4Y as "3-4Y", t1.Y4__5Y as "4-5Y", t1.Y7__8Y as "7-8Y", t1.Y9__10Y as "9-10Y",
     t1.F10__11F as "10/11F", t1.F11__12F as "11/12F", t1.F2__3F as "2/3F",
-    t1.05_Jun as "6S",  t1.07_Aug as "8S"
+    t1.05_Jun as "6S",  t1.07_Aug as "8S",
+    t2.Collection, t2.Article, t2.Origin, t2.SizeRange, t2.GarmentType, t2.Brand, t2.Brand, t2.FabCom, t2.WashCare
     
 		FROM torque_stock_by_size_Pivot_Pretty as t1
 		LEFT OUTER JOIN sku as t2
@@ -1128,7 +1129,114 @@ SELECT
 		GROUP BY LineCol
 		ORDER BY LineCol
 
-/* ######################################   */
+/*/////////////////////////////// Customer    //////////////*/
+
+SELECT
+    t2.LineCol, t2.Style, t2.Colour, 
+    t6.Col_Num, t6.Season,  
+    
+	t1.06, t1.08, t1.10, t1.12, t1.14, t1.16,
+    t1.XS, t1.S, t1.M, t1.L, t1.XL, t1.XXL,
+    t1.STM as "S/M", t1.MTM as "M/L",
+    
+    sum(t6.AVAILABLE) as Total,
+    
+    t6.Landed,  t6.Cost, t6.RRPGBP, t6.RRPEuro,
+    
+    t3.Total_Qty_Sold,
+    
+    t4.Total_Qty_Sold_In_Last_Order,
+    
+    t6.Collection, t6.Article, t6.Origin, 
+    
+    t2.Brand, 
+    
+    t5.URL_Ama_com_1, t5.URL_Big_com_1,
+    
+    t6.Fab_Com, t6.Wash_Care, t6.Brand_Name,
+    
+    t2.SizeRange, t2.GarmentType
+    
+	FROM torque_stock_by_size_Pivot_Pretty as t1
+        
+		LEFT OUTER JOIN sku as t2
+		ON t1.SKU = t2.SKU
+        
+					LEFT OUTER JOIN Cutomer_Order_View_By_Customer_Code as t3
+					ON t1.SKU = t3.SKU
+                    
+						LEFT OUTER JOIN Cutomer_Order_View_By_Order_RSN as t4
+						ON t1.SKU = t4.SKU
+                        
+							LEFT OUTER JOIN url_link as t5
+							ON t1.SKU = t5.SKU
+                            
+								LEFT OUTER JOIN torque_stock as t6
+								ON t1.SKU = t6.SKU
+		
+        WHERE t6.Brand_Name IN ('ISKA') AND 
+                                
+		t6.Season IN ( 'SS19', 'SS20') AND
+        
+		t6.AVAILABLE > '0'
+                    
+		GROUP BY LineCol
+		ORDER BY LineCol
+
+/*/////////////////////////////// end   //////////////*/
+###################### Cutomer Order View by customer Code    ###############
+
+create view Cutomer_Order_View_By_Customer_Code as (
+SELECT
+sku.LineCol, sku.Style, item.ColourCode, sku.Colour,
+sku.BrandName, sku.Season,
+item.SKU, item.Article,
+sum(item.TotalQty) as Total_Qty_Sold, count(head.RSN) as Tiems_Sold,
+min(item.SellPrice) as Lowest_Sold_Price,
+item.BuyPrice as Landed_Cost_GBP,
+max(item.SellPrice) as Max_Sold_Price, 
+avg(item.SellPrice) as Average_Sold_Price,
+customer.Cus_Code as Customer_Code, customer.Name as Customer_Name,
+head.RSN, head.AcCode, head.Status, head.CreateDate
+
+FROM item join head join customer join sku 
+
+ON item.CustOrderRSN_ID = head.Id 
+AND item.sku_id = sku.Id 
+AND head.Customer_Id = customer.Id 
+
+AND cus_code = 'BA004A' 
+
+GROUP BY SKU 
+ORDER BY SKU DESC
+);
+
+/*/////////////////////////////// end   //////////////*/
+
+create view Cutomer_Order_View_By_Order_RSN as (
+
+SELECT
+	sku.LineCol, sku.Style, sku.Colour,
+    sum(item.TotalQty) as Total_Qty_Sold_In_Last_Order,
+	customer.cus_code, customer.Name,
+	head.RSN, head.OrderNum, head.AcCode, head.Status, head.CreateDate,
+	item.SKU, item.Article, item.ColourCode, item.SellPrice
+FROM
+	item join head join customer join sku
+ON
+	item.CustOrderRSN_ID = head.Id
+AND
+	head.customer_Id = customer.id
+And
+	item.sku_id = sku.Id
+
+WHERE RSN IN (169751, 169752, 169801)
+GROUP BY SKU
+ORDER BY SKU DESC
+
+);
+
+/*/////////////////////////////// end   //////////////*/
 
 create view torque_stock_by_size_test as (
   select
@@ -1139,6 +1247,7 @@ create view torque_stock_by_size_test as (
 	case when SKU_SIZE = "VIII" then AVAILABLE end as VIII
 
 	from torque_stock
+    
 );
 
 /*/////////////////////////////// end   //////////////*/
@@ -1167,10 +1276,9 @@ create view torque_stock_by_size_test_Pivot_Pretty as (
 from torque_stock_by_size_test_Pivot
 );
 
-
+/*/////////////////////////////// Join View with tables ex   //////////////*/
 
 /* ?* https://stackoverflow.com/questions/12004603/mysql-pivot-row-into-dynamic-number-of-columns */
-
 SELECT
 	t1.SKU, t1.LineCol, t1.Style, t1.Colour,
 	t1.BrandName, t1.Season, t1.RRPGBP
@@ -1179,10 +1287,8 @@ LEFT OUTER JOIN torque_stock_by_size_Pivot_Pretty as t2
 ON t1.SKU = t2.SKU
 GROUP BY SKU
 ORDER BY SKU
-#####################################
 
-
-
+/*/////////////////////////////// end   //////////////*/
 
 
 
